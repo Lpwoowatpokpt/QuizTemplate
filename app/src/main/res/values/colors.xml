@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#d81b60</color>
+    <color name="colorPrimaryDark">#a00037</color>
+    <color name="colorAccent">#03A9F4</color>
+
+    <color name="alertDialogueDark">#12121F</color>
+
+    <color name="rippleEffectColor">#f816a463</color>
+
+    <color name="google_fab">#F16666</color>
+    <color name="facebook_fab">#2881EE</color>
+
+    <color name="correctAns">#009688</color>
+    <color name="wrongAns">#E91E63</color>
+
+    <color name="colorDelete">#E91E63</color>
+
+
+
+    <color name="questionTextBackground">#80242323</color>
+
+
+    <color name="answer_button_color">#F1EDED</color>
+    <color name="answer_button_filled_color">#D8D8D8</color>
+    <color name="answer_button_border_color">#A09696</color>
+
+
+
+</resources>
