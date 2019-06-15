@@ -1,7 +1,6 @@
-package com.lpwoowatpokpt.quiztemplate;
+package com.lpwoowatpokpt.quiztemplate.UI.Login;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -50,6 +49,7 @@ import com.lpwoowatpokpt.quiztemplate.Common.Common;
 import com.lpwoowatpokpt.quiztemplate.Common.TinyDB;
 import com.lpwoowatpokpt.quiztemplate.Common.Utils;
 import com.lpwoowatpokpt.quiztemplate.Model.User;
+import com.lpwoowatpokpt.quiztemplate.R;
 import com.lpwoowatpokpt.quiztemplate.UI.HomeActivity;
 import com.squareup.picasso.Picasso;
 
@@ -79,11 +79,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     RelativeLayout root;
 
-    AlertDialog dialog;
+    SpotsDialog dialog;
 
     Button anonimusButton;
 
     TinyDB tinyDB;
+
+    //sign in with email and password
+    Button sign_in_btn, sign_up_btn;
+
 
     //google sign in
     FloatingActionButton googleSignIn;
@@ -132,6 +136,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Utils.onActivityCreateSetTheme(this, tinyDB.getInt(Common.THEME_ID));
         setContentView(R.layout.activity_login);
 
+        sign_in_btn = findViewById(R.id.sign_in_btn);
+        sign_in_btn.setOnClickListener(this);
+        sign_up_btn = findViewById(R.id.sign_up_btn);
+        sign_up_btn.setOnClickListener(this);
+
         auth = FirebaseAuth.getInstance();
         users = Common.getDatabase().getReference(Common.USERS);
 
@@ -141,8 +150,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (Common.isConnectedToInternet(getApplicationContext()))
             LoadWallpaperFromFirebase();
 
-        root = findViewById(R.id.relativeLayout);
-        dialog = new SpotsDialog(this);
+        root = findViewById(R.id.root_layout);
+        dialog = (SpotsDialog) new SpotsDialog.Builder().setContext(this).build();
 
         //buttons
         anonimusButton = findViewById(R.id.anonimus_button);
@@ -228,6 +237,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onClick(View v) {
     switch (v.getId()){
+        case R.id.btn_sign_up:
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
+            finish();
+            break;
         case R.id.anonimus_button:
             ContinueAnonimus();
             break;

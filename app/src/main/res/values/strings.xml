@@ -102,5 +102,11 @@
     <string name="undo">UNDO</string>
     <string name="play_random">Play with random person</string>
     <string name="invite_friend">Invite friend to play with you</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="or">or</string>
+    <string name="email">Email</string>
+    <string name="username">Your name</string>
+    <string name="create_password">Create password</string>
+    <string name="create_account">create account</string>
 
 </resources>

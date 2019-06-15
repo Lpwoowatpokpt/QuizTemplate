@@ -14,9 +14,13 @@
         android:roundIcon="@mipmap/internet"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.MultiplayerPlayingActivity"
+        <activity android:name=".UI.Login.SignUpActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.MultiplayerPlayingActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".UI.SuggestedListActivity"
+        <activity
+            android:name=".UI.SuggestedListActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.ConfirmQuetionActivity"
@@ -42,7 +46,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".UI.Login.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

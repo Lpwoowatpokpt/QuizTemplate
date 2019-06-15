@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_bg"
+    android:padding="16dp"
+    tools:context=".UI.Login.SignUpActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userAvatarPreview"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/addavatar"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="8dp"
+        app:border_color="@color/colorAccent"
+        app:border_width="2dp"/>
+
+    <EditText
+        android:layout_margin="8dp"
+        android:padding="10dp"
+        android:ems="10"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/input_background"
+        android:id="@+id/edt_username"
+        android:inputType="textAutoCorrect"
+        android:hint="@string/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:importantForAutofill="no"
+        tools:ignore="UnusedAttribute" />
+
+    <EditText
+        android:layout_margin="8dp"
+        android:padding="10dp"
+        android:ems="10"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/input_background"
+        android:id="@+id/edt_email"
+        android:inputType="textEmailAddress"
+        android:hint="@string/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:importantForAutofill="no"
+        tools:ignore="UnusedAttribute" />
+
+    <LinearLayout
+        android:weightSum="10"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_margin="8dp"
+            android:padding="10dp"
+            android:ems="10"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/input_background"
+            android:id="@+id/edt_password"
+            android:inputType="textPassword"
+            android:hint="@string/create_password"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            tools:ignore="UnusedAttribute" />
+
+        <ImageView
+            android:id="@+id/switch_show_pass"
+            android:src="@drawable/ic_visibility_white_24dp"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_sign_up"
+        android:textColor="@android:color/white"
+        android:text="@string/create_account"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_highlight_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

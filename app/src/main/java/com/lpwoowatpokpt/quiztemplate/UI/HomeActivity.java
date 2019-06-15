@@ -19,7 +19,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,18 +48,17 @@ import com.lpwoowatpokpt.quiztemplate.Common.AppController;
 import com.lpwoowatpokpt.quiztemplate.Common.Common;
 import com.lpwoowatpokpt.quiztemplate.Common.TinyDB;
 import com.lpwoowatpokpt.quiztemplate.Common.Utils;
-import com.lpwoowatpokpt.quiztemplate.LoginActivity;
 import com.lpwoowatpokpt.quiztemplate.Model.User;
 import com.lpwoowatpokpt.quiztemplate.R;
 import com.lpwoowatpokpt.quiztemplate.UI.Fragments.CategoryFragment;
 import com.lpwoowatpokpt.quiztemplate.UI.Fragments.RankingFragment;
 import com.lpwoowatpokpt.quiztemplate.UI.Fragments.SettingsFragment;
 import com.lpwoowatpokpt.quiztemplate.UI.Fragments.StatisticsFragment;
+import com.lpwoowatpokpt.quiztemplate.UI.Login.LoginActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
@@ -106,6 +104,7 @@ public class HomeActivity extends AppCompatActivity
                 if (isAppInBackground && Common.currentUser!=null)
                     SwitchUserToOffline();
                 else
+                    if(Common.currentUser!=null)
                     SwitchUserToOnline();
             }
         });
@@ -127,7 +126,7 @@ public class HomeActivity extends AppCompatActivity
 
         users = Common.getDatabase().getReference(Common.USERS);
 
-        dialog = new SpotsDialog(this);
+        dialog = (SpotsDialog) new SpotsDialog.Builder().setContext(this).build();
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.home));
