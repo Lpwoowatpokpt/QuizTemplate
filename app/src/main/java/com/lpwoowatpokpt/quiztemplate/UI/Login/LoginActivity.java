@@ -137,9 +137,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         sign_in_btn = findViewById(R.id.sign_in_btn);
-        sign_in_btn.setOnClickListener(this);
+
         sign_up_btn = findViewById(R.id.sign_up_btn);
-        sign_up_btn.setOnClickListener(this);
+        sign_up_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         auth = FirebaseAuth.getInstance();
         users = Common.getDatabase().getReference(Common.USERS);
@@ -237,11 +244,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onClick(View v) {
     switch (v.getId()){
-        case R.id.btn_sign_up:
-            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-            startActivity(intent);
-            finish();
-            break;
         case R.id.anonimus_button:
             ContinueAnonimus();
             break;

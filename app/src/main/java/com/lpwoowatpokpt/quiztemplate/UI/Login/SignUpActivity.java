@@ -1,8 +1,12 @@
 package com.lpwoowatpokpt.quiztemplate.UI.Login;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,7 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //sign_in_dialogue
     CircleImageView addAvatarBtn;
-    EditText edt_email, edt_username, edt_password;
+    TextInputEditText edt_email, edt_userName, edt_password;
     ImageView btn_switch_pass_visibility;
     Button create_account_btn;
 
@@ -41,5 +45,15 @@ public class SignUpActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         setContentView(R.layout.activity_sign_up);
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
