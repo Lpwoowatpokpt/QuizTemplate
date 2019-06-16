@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/gradient_bg"
+    android:id="@+id/root"
     android:padding="16dp"
     tools:context=".UI.Login.SignUpActivity">
 
@@ -91,7 +92,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/btn_highlight_background"
+        android:background="@drawable/border_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

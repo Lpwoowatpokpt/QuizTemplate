@@ -108,5 +108,10 @@
     <string name="username">Your name</string>
     <string name="create_password">Create password</string>
     <string name="create_account">create account</string>
+    <string name="email_required">Email is required</string>
+    <string name="username_required">Name is required</string>
+    <string name="password_required">password is required</string>
+    <string name="email_not_valid">email is not valid</string>
+    <string name="add_avatar">Please, add avatar</string>
 
 </resources>

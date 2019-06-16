@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -85,9 +87,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     TinyDB tinyDB;
 
+    ImageView no_internet_btn;
+
     //sign in with email and password
     Button sign_in_btn, sign_up_btn;
-
 
     //google sign in
     FloatingActionButton googleSignIn;
@@ -97,7 +100,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     //facebook sign in
     FloatingActionButton facebookSignIn;
     private CallbackManager callbackManager;
-
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -109,7 +111,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onStart();
        SignInOldUser();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,17 +149,35 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
+        root = findViewById(R.id.root_layout);
+        dialog = (SpotsDialog) new SpotsDialog.Builder().setContext(this).build();
+
         auth = FirebaseAuth.getInstance();
         users = Common.getDatabase().getReference(Common.USERS);
 
         wallpapers = Common.getDatabase().getReference(WALLPAPERS);
         background = findViewById(R.id.image_bg);
 
-        if (Common.isConnectedToInternet(getApplicationContext()))
-            LoadWallpaperFromFirebase();
+        no_internet_btn = findViewById(R.id.no_internet_btn);
 
-        root = findViewById(R.id.root_layout);
-        dialog = (SpotsDialog) new SpotsDialog.Builder().setContext(this).build();
+        if (Common.isConnectedToInternet(getApplicationContext())) {
+            LoadWallpaperFromFirebase();
+            no_internet_btn.setVisibility(View.GONE);
+        }
+        else {
+            no_internet_btn.setVisibility(View.VISIBLE);
+            no_internet_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            Common.ShowSnackbar(root, getString(R.string.no_internet));
+        }
+
+
+
 
         //buttons
         anonimusButton = findViewById(R.id.anonimus_button);
@@ -183,10 +202,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     public boolean IsFirstRun(){
         return tinyDB.getAll().isEmpty();
-
     }
-
-
 
     private void LoadWallpaperFromFirebase() {
         wallpapers.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -220,7 +236,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public boolean CheckIfUserIdExist(String id, DataSnapshot dataSnapshot){
         for (DataSnapshot ds: dataSnapshot.getChildren()){
@@ -230,16 +245,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         return false;
     }
 
-
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
-    private  void ShowSnackbar(String message){
-        Snackbar snack = Snackbar.make(root, message, Snackbar.LENGTH_SHORT);
-        snack.show();
-    }
+
 
     @Override
     public void onClick(View v) {
@@ -251,13 +261,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if (Common.isConnectedToInternet(this))
                 SignInWithGoogle();
             else
-                ShowSnackbar(getString(R.string.no_internet));
+                Common.ShowSnackbar(root,getString(R.string.no_internet));
             break;
         case R.id.facebook_btn:
             if(Common.isConnectedToInternet(this))
             InitFacebookSdk();
             else
-                ShowSnackbar(getString(R.string.no_internet));
+                Common.ShowSnackbar(root,getString(R.string.no_internet));
             break;
 }
     }
@@ -301,7 +311,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         if (!task.isSuccessful())
                         {
                             dialog.dismiss();
-                            ShowSnackbar(getString(R.string.failed));
+                            Common.ShowSnackbar(root,getString(R.string.failed));
                         }else
                         {
                             users.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -323,7 +333,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
     }
-
 
     private void SignInWithGoogle() {
         dialog.show();
@@ -354,7 +363,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         assert account != null;
                         FirebaseAuthWithGoogle(account);
                     }else
-                    ShowSnackbar(getString(R.string.no_internet));
+                    Common.ShowSnackbar(root,getString(R.string.no_internet));
                 }
             }
     }
@@ -417,7 +426,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         dialog.dismiss();
-                        ShowSnackbar(getString(R.string.failed));
+                        Common.ShowSnackbar(root, getString(R.string.failed));
                     }
                 });
     }
@@ -464,7 +473,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         } else
         {
-            ShowSnackbar(getString(R.string.no_internet));
+            Common.ShowSnackbar(root, getString(R.string.no_internet));
         }
     }
 }

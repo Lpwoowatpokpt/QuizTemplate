@@ -4,16 +4,21 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.lpwoowatpokpt.quiztemplate.Model.Question;
 import com.lpwoowatpokpt.quiztemplate.Model.User;
@@ -48,6 +53,11 @@ public class Common {
     public static final String FALSE = "false";
     public static final String TRUE = "true";
 
+    public static final String AVATAR_REVERENCE = "avatars";
+    public static final String NAME = "name";
+    public static final String IMAGE = "image";
+    public static final String TOKEN_ID = "token_id";
+
 
     //tinyDB
     public static final String TIME = "time";
@@ -79,10 +89,16 @@ public class Common {
 
     public static final String FONT_DEFAULT = "fonts/OptimusPrinceps.ttf";
 
+    private static FirebaseAuth mAuth;
     private static FirebaseDatabase mDatabase;
-
     private static FirebaseStorage mStorage;
+    private static FirebaseFirestore mFirestore;
 
+    public static FirebaseAuth getAuth(){
+        if(mAuth == null)
+            mAuth = FirebaseAuth.getInstance();
+        return mAuth;
+    }
 
     public static FirebaseDatabase getDatabase() {
         if (mDatabase == null)
@@ -94,6 +110,12 @@ public class Common {
         if (mStorage == null)
             mStorage = FirebaseStorage.getInstance();
         return mStorage;
+    }
+
+    public static FirebaseFirestore getFirestore(){
+        if(mFirestore == null)
+            mFirestore = FirebaseFirestore.getInstance();
+        return mFirestore;
     }
 
 
@@ -146,4 +168,13 @@ public class Common {
                 message, Toast.LENGTH_LONG);
         toast.show();
     }
+
+    public static void ShowSnackbar(View view, String message){
+            Snackbar snack = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
+            View _view = snack.getView();
+            TextView tv = _view.findViewById(android.support.design.R.id.snackbar_text);
+            tv.setTextColor(Color.WHITE);
+            snack.show();
+    }
+
 }

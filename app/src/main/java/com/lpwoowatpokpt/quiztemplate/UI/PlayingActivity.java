@@ -584,19 +584,15 @@ public class PlayingActivity extends AppCompatActivity implements View.OnClickLi
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        ShowToast(getString(R.string.message_sent));
+                        Common.ShowToast(getBaseContext(),getString(R.string.message_sent));
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                ShowToast(String.valueOf(e));
+                Common.ShowToast(getBaseContext(),String.valueOf(e));
             }
         });
     }
 
-    private void ShowToast(String msg){
-        Toast toast = Toast.makeText(getApplicationContext(),
-                msg, Toast.LENGTH_SHORT);
-        toast.show();
-    }
+
 }
