@@ -113,5 +113,6 @@
     <string name="password_required">password is required</string>
     <string name="email_not_valid">email is not valid</string>
     <string name="add_avatar">Please, add avatar</string>
+    <string name="password">Password</string>
 
 </resources>

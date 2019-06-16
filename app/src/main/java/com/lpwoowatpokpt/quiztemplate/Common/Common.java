@@ -26,6 +26,8 @@ import com.lpwoowatpokpt.quiztemplate.UI.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Common {
 
@@ -57,6 +59,7 @@ public class Common {
     public static final String NAME = "name";
     public static final String IMAGE = "image";
     public static final String TOKEN_ID = "token_id";
+    public static final String ONLINE = "online";
 
 
     //tinyDB
@@ -175,6 +178,13 @@ public class Common {
             TextView tv = _view.findViewById(android.support.design.R.id.snackbar_text);
             tv.setTextColor(Color.WHITE);
             snack.show();
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
 }

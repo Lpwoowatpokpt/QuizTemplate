@@ -76,7 +76,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     KenBurnsView background;
 
-    FirebaseAuth auth;
     DatabaseReference users;
 
     RelativeLayout root;
@@ -138,27 +137,50 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         sign_in_btn = findViewById(R.id.sign_in_btn);
+        sign_in_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Common.isConnectedToInternet(getBaseContext())){
+                    Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    Common.ShowSnackbar(root, getString(R.string.no_internet));
+                }
+            }
+        });
 
         sign_up_btn = findViewById(R.id.sign_up_btn);
         sign_up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
-                finish();
+                if (Common.isConnectedToInternet(getBaseContext())){
+                    Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    Common.ShowSnackbar(root, getString(R.string.no_internet));
+                }
+
             }
         });
 
         root = findViewById(R.id.root_layout);
         dialog = (SpotsDialog) new SpotsDialog.Builder().setContext(this).build();
 
-        auth = FirebaseAuth.getInstance();
         users = Common.getDatabase().getReference(Common.USERS);
 
         wallpapers = Common.getDatabase().getReference(WALLPAPERS);
         background = findViewById(R.id.image_bg);
 
         no_internet_btn = findViewById(R.id.no_internet_btn);
+        no_internet_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                startActivity(intent);
+            }
+        });
 
         if (Common.isConnectedToInternet(getApplicationContext())) {
             LoadWallpaperFromFirebase();
@@ -166,17 +188,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
         else {
             no_internet_btn.setVisibility(View.VISIBLE);
-            no_internet_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-                    startActivity(intent);
-                }
-            });
             Common.ShowSnackbar(root, getString(R.string.no_internet));
         }
-
-
 
 
         //buttons
@@ -187,7 +200,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         anonimusButton.setOnClickListener(this);
         googleSignIn.setOnClickListener(this);
         facebookSignIn.setOnClickListener(this);
-
 
         //google
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -303,7 +315,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void SignInWithFacebook(AccessToken accessToken) {
         dialog.show();
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-        auth.signInWithCredential(credential)
+        Common.getAuth().signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
@@ -317,7 +329,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             users.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if(CheckIfUserIdExist(Objects.requireNonNull(auth.getCurrentUser()).getUid(), dataSnapshot))
+                                    if(CheckIfUserIdExist(Objects.requireNonNull(Common.getAuth().getCurrentUser()).getUid(), dataSnapshot))
                                         SignInOldUser();
                                     else
                                         SignInNewFBUser(task);
@@ -371,7 +383,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void FirebaseAuthWithGoogle(final GoogleSignInAccount account)
     {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        auth.signInWithCredential(credential)
+        Common.getAuth().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -381,7 +393,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if(CheckIfUserIdExist(Objects.requireNonNull(auth.getCurrentUser()).getUid(), dataSnapshot))
+                                    if(CheckIfUserIdExist(Objects.requireNonNull(Common.getAuth().getCurrentUser()).getUid(), dataSnapshot))
                                         SignInOldUser();
                                     else
                                         SignInNewUser(account);
@@ -416,7 +428,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         Toast.makeText(getBaseContext(), getString(R.string.success),
                                 Toast.LENGTH_LONG).show();
                         Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);
-                        Common.currentUser = auth.getCurrentUser();
+                        Common.currentUser = Common.getAuth().getCurrentUser();
                         startActivity(homeActivity);
                         finish();
                         dialog.dismiss();
@@ -441,7 +453,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .setPhotoUri(Uri.parse(photoUrl))
                 .build();
 
-        auth.getCurrentUser().updateProfile(profileChangeRequest);
+        Common.getAuth().getCurrentUser().updateProfile(profileChangeRequest);
 
         String name = task.getResult().getUser().getDisplayName();
 
@@ -454,7 +466,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Toast.LENGTH_LONG).show();
 
         Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);
-        Common.currentUser = auth.getCurrentUser();
+        Common.currentUser = Common.getAuth().getCurrentUser();
         startActivity(homeActivity);
         finish();
 
@@ -462,7 +474,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void SignInOldUser() {
-        FirebaseUser currentUser = auth.getCurrentUser();
+        FirebaseUser currentUser = Common.getAuth().getCurrentUser();
         if (Common.isConnectedToInternet(getBaseContext())) {
             if (currentUser != null) {
                 Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);

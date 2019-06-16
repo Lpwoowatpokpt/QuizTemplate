@@ -105,7 +105,10 @@ public class SignUpActivity extends AppCompatActivity {
         create_account_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imageUri==null){
+                if(!Common.isConnectedToInternet(getBaseContext())){
+                    Common.ShowSnackbar(root, getString(R.string.no_internet));
+                }
+                else if (imageUri==null){
                     Common.ShowSnackbar(root, getString(R.string.add_avatar));
                 }
                else if(TextUtils.isEmpty(edt_email.getText())){
@@ -117,7 +120,7 @@ public class SignUpActivity extends AppCompatActivity {
                else if (TextUtils.isEmpty(edt_password.getText())){
                  edt_password.setError(getString(R.string.password_required));
                }
-               else if (!isEmailValid(edt_email.getText().toString())){
+               else if (!Common.isEmailValid(edt_email.getText().toString())){
                    edt_email.setError(getString(R.string.email_not_valid));
                }
                else
@@ -156,17 +159,20 @@ public class SignUpActivity extends AppCompatActivity {
                                                     userMap.put(Common.IMAGE, imageUrl);
                                                     assert tokenId!=null;
                                                     userMap.put(Common.TOKEN_ID, tokenId);
+                                                    userMap.put(Common.ONLINE, Common.FALSE);
 
                                                     Common.getFirestore().collection(Common.USERS).document(userId).set(userMap)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
-
+                                                                    dialog.dismiss();
+                                                                    login();
                                                                 }
                                                             }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
-
+                                                            Common.ShowSnackbar(root, "Error : " + e.getMessage());
+                                                            dialog.dismiss();
                                                         }
                                                     });
                                                 }
@@ -182,15 +188,8 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-
-    public static boolean isEmailValid(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
     private void login() {
+        Common.currentUser = Common.getAuth().getCurrentUser();
         Intent mainIntent = new Intent(SignUpActivity.this, HomeActivity.class);
         startActivity(mainIntent);
         finish();
@@ -208,10 +207,11 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE){
+           if (data!=null){
+                imageUri = data.getData();
+                addAvatarBtn.setImageURI(imageUri);
+            }
 
-            assert data != null;
-            imageUri = data.getData();
-            addAvatarBtn.setImageURI(imageUri);
 
         }
     }
