@@ -1,7 +1,6 @@
 package com.lpwoowatpokpt.quiztemplate.Common;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -56,11 +55,10 @@ public class Common {
     public static final String TRUE = "true";
 
     public static final String AVATAR_REVERENCE = "avatars";
-    public static final String NAME = "name";
+    public static final String NAME = "userName";
     public static final String IMAGE = "image";
     public static final String TOKEN_ID = "token_id";
     public static final String ONLINE = "online";
-
 
     //tinyDB
     public static final String TIME = "time";
@@ -85,11 +83,8 @@ public class Common {
 
     private static final String PACKAGE_NAME = "com.lpwoowatpokpt.quiztemplate";
 
-
     public static final String IN_PROGRESS = "waiting for confirmation";
-
     public static final int PICK_IMAGE_REQUEST = 231;
-
     public static final String FONT_DEFAULT = "fonts/OptimusPrinceps.ttf";
 
     private static FirebaseAuth mAuth;
@@ -120,7 +115,6 @@ public class Common {
             mFirestore = FirebaseFirestore.getInstance();
         return mFirestore;
     }
-
 
     public static boolean isConnectedToInternet(Context context)
     {

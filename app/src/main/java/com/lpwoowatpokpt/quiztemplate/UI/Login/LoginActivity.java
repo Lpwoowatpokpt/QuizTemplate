@@ -191,7 +191,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Common.ShowSnackbar(root, getString(R.string.no_internet));
         }
 
-
         //buttons
         anonimusButton = findViewById(R.id.anonimus_button);
         googleSignIn = findViewById(R.id.google_btn);
@@ -260,8 +259,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -337,10 +334,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                                 }
                             });
-
                         }
                     }
                 });
@@ -409,7 +404,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
-
     private void SignInNewUser(GoogleSignInAccount account) {
         final User user = new User();
 
@@ -417,7 +411,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user.setPhotoUrl(account.getPhotoUrl().toString());
 
         user.setUserName(account.getDisplayName());
-        user.setOnline(Common.FALSE);
+        user.setOnline(false);
         user.setBalance(100);
 
         users.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -457,7 +451,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         String name = task.getResult().getUser().getDisplayName();
 
-        User user = new User(name, photoUrl, Common.FALSE, 100);
+        User user = new User("tokenId",name, photoUrl,100, false, false);
 
         users.child(uid).setValue(user);
 

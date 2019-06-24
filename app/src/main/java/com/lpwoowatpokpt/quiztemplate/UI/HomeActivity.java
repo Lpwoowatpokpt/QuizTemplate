@@ -213,12 +213,12 @@ public class HomeActivity extends AppCompatActivity
 
         Picasso.get().load(Common.currentUser.getPhotoUrl()).into(userAvatar);
 
-        if (Common.currentUser.getDisplayName().contains(" ")){
+/*        if (Common.currentUser.getDisplayName().contains(" ")){
             String [] nameSeparated = Common.currentUser.getDisplayName().split(" ");
             userName.setText(nameSeparated[0]);
         }else
             userName.setText(Common.currentUser.getDisplayName());
-
+*/
     }
 
 

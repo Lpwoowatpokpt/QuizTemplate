@@ -21,11 +21,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.lpwoowatpokpt.quiztemplate.Common.Common;
 import com.lpwoowatpokpt.quiztemplate.Common.TinyDB;
+import com.lpwoowatpokpt.quiztemplate.Model.User;
 import com.lpwoowatpokpt.quiztemplate.R;
 import com.lpwoowatpokpt.quiztemplate.UI.HomeActivity;
 
@@ -51,6 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //firebase
     private StorageReference mStorage;
+    private CollectionReference mUsers;
 
     //sign_in_dialogue
     CircleImageView addAvatarBtn;
@@ -83,7 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
         root = findViewById(R.id.root);
 
         mStorage = Common.getStorage().getReference().child(Common.AVATAR_REVERENCE);
-;
+        mUsers = Common.getFirestore().collection(Common.USERS);
 
         addAvatarBtn = findViewById(R.id.userAvatarPreview);
         addAvatarBtn.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +128,7 @@ public class SignUpActivity extends AppCompatActivity {
                    edt_email.setError(getString(R.string.email_not_valid));
                }
                else
+                   //if user not exist, create new user
                    signInWithEmailAndPassword(edt_email.getText().toString(),edt_userName.getText().toString(),  edt_password.getText().toString());
             }
         });
@@ -136,6 +141,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     final String userId = Common.getAuth().getUid();
+
                     StorageReference user_profile = mStorage.child(userId+".jpg");
 
                     user_profile.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -146,20 +152,41 @@ public class SignUpActivity extends AppCompatActivity {
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     if (taskSnapshot.getMetadata()!=null){
                                         if(taskSnapshot.getMetadata().getReference()!=null){
+
                                             Task<Uri>result = taskSnapshot.getStorage().getDownloadUrl();
                                             result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+
                                                 @Override
                                                 public void onSuccess(Uri uri) {
-                                                    final String imageUrl = uri.toString();
-
+                                                    final String photoUrl = uri.toString();
                                                     String tokenId = FirebaseInstanceId.getInstance().getToken();
+
+                                                    User user = new User(tokenId, name, photoUrl, 100, true, false);
+                                                    mUsers.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference) {
+                                                            dialog.dismiss();
+                                                            login();
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Common.ShowSnackbar(root, "Error : " + e.getMessage());
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+
+                                                    /*
 
                                                     final Map<String,Object>userMap = new HashMap<>();
                                                     userMap.put(Common.NAME, name);
                                                     userMap.put(Common.IMAGE, imageUrl);
+
                                                     assert tokenId!=null;
                                                     userMap.put(Common.TOKEN_ID, tokenId);
-                                                    userMap.put(Common.ONLINE, Common.FALSE);
+
+                                                    userMap.put(Common.BALANCE, 100);
+                                                    userMap.put(Common.ONLINE, false);
 
                                                     Common.getFirestore().collection(Common.USERS).document(userId).set(userMap)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -174,7 +201,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                             Common.ShowSnackbar(root, "Error : " + e.getMessage());
                                                             dialog.dismiss();
                                                         }
-                                                    });
+                                                    });*/
                                                 }
                                             });
                                         }
